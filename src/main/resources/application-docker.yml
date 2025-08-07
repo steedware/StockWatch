@@ -1,0 +1,42 @@
+spring:
+  application:
+    name: stockwatch
+
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://postgres:5432/stockwatch}
+    username: ${SPRING_DATASOURCE_USERNAME:stockwatch}
+    password: ${SPRING_DATASOURCE_PASSWORD:stockwatch}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    locations: classpath:db/migration
+
+server:
+  port: 8080
+
+jwt:
+  secret: ${JWT_SECRET:mySecretKey123456789012345678901234567890}
+  expiration: 86400000
+
+stock:
+  api:
+    base-url: ${STOCK_API_BASE_URL:https://www.alphavantage.co}
+    key: ${STOCK_API_KEY:demo}
+    fetch-interval: ${STOCK_FETCH_INTERVAL:300000}
+
+logging:
+  level:
+    org.example: INFO
+    org.springframework.security: WARN
+  file:
+    name: logs/stockwatch.log

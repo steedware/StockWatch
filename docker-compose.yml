@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: stockwatch
+      POSTGRES_USER: stockwatch
+      POSTGRES_PASSWORD: stockwatch
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U stockwatch"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  stockwatch-app:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/stockwatch
+      SPRING_DATASOURCE_USERNAME: stockwatch
+      SPRING_DATASOURCE_PASSWORD: stockwatch
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./logs:/app/logs
+
+volumes:
+  postgres_data:
