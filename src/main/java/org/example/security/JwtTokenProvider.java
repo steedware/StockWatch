@@ -7,7 +7,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import jakarta.annotation.PostConstruct;
 import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 @Component
@@ -19,8 +21,23 @@ public class JwtTokenProvider {
     @Value("${jwt.expiration}")
     private int jwtExpirationInMs;
 
+    private SecretKey signingKey;
+
+    @PostConstruct
+    public void init() {
+        // Ensure the secret is at least 32 characters (256 bits) for HMAC-SHA
+        String secret = jwtSecret;
+        if (secret.length() < 32) {
+            // Pad the secret if it's too short
+            secret = secret + "0".repeat(32 - secret.length());
+        }
+
+        byte[] keyBytes = secret.getBytes(StandardCharsets.UTF_8);
+        this.signingKey = Keys.hmacShaKeyFor(keyBytes);
+    }
+
     private SecretKey getSigningKey() {
-        return Keys.hmacShaKeyFor(jwtSecret.getBytes());
+        return signingKey;
     }
 
     public String generateToken(Authentication authentication) {

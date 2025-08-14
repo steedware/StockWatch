@@ -6,6 +6,7 @@ services:
     buildCommand: ./mvnw clean package -DskipTests
     startCommand: java -Dspring.profiles.active=prod -Dserver.port=$PORT -jar target/StockWatch-1.0-SNAPSHOT.jar
     healthCheckPath: /actuator/health
+    plan: starter
     envVars:
       - key: DATABASE_URL
         fromDatabase:
@@ -22,7 +23,7 @@ services:
       - key: JWT_SECRET
         generateValue: true
       - key: STOCK_API_KEY
-        value: demo  # Replace with your AlphaVantage API key
+        value: demo
       - key: SPRING_PROFILES_ACTIVE
         value: prod
 
@@ -32,13 +33,21 @@ services:
     env: node
     buildCommand: cd frontend && npm ci && npm run build
     staticPublishPath: ./frontend/build
+    plan: starter
     routes:
       - type: rewrite
         source: /*
         destination: /index.html
+    envVars:
+      - key: REACT_APP_API_URL
+        fromService:
+          type: web
+          name: stockwatch-api
+          property: host
 
 # Database
 databases:
   - name: stockwatch-db
     databaseName: stockwatch
     user: stockwatch
+    plan: starter

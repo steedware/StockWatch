@@ -29,7 +29,7 @@ server:
   port: 8080
 
 jwt:
-  secret: mySecretKey123456789012345678901234567890
+  secret: mySecretKey1234567890123456789012345678901234567890abcdef
   expiration: 86400000
 
 stock:
