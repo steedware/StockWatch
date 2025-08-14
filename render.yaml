@@ -2,11 +2,9 @@ services:
   # Backend API Service
   - type: web
     name: stockwatch-api
-    env: java
-    buildCommand: ./mvnw clean package -DskipTests
-    startCommand: java -Dspring.profiles.active=prod -Dserver.port=$PORT -jar target/StockWatch-1.0-SNAPSHOT.jar
-    healthCheckPath: /actuator/health
+    runtime: docker
     plan: starter
+    healthCheckPath: /actuator/health
     envVars:
       - key: DATABASE_URL
         fromDatabase:
@@ -27,10 +25,10 @@ services:
       - key: SPRING_PROFILES_ACTIVE
         value: prod
 
-  # Frontend Service
+  # Frontend Service (Static Site)
   - type: web
     name: stockwatch-frontend
-    env: node
+    runtime: static
     buildCommand: cd frontend && npm ci && npm run build
     staticPublishPath: ./frontend/build
     plan: starter
@@ -40,10 +38,7 @@ services:
         destination: /index.html
     envVars:
       - key: REACT_APP_API_URL
-        fromService:
-          type: web
-          name: stockwatch-api
-          property: host
+        value: https://stockwatch-api.onrender.com/api
 
 # Database
 databases:
