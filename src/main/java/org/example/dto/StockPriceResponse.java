@@ -1,4 +1,5 @@
 package org.example.dto;
+
 import java.math.BigDecimal;
 
 public class StockPriceResponse {
@@ -23,4 +24,3 @@ public class StockPriceResponse {
     public String getTimestamp() { return timestamp; }
     public void setTimestamp(String timestamp) { this.timestamp = timestamp; }
 }
-

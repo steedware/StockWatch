@@ -1,4 +1,5 @@
 package org.example.controller;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -17,10 +18,10 @@ import java.util.List;
 @Tag(name = "Alerts", description = "Manage stock price alerts")
 @SecurityRequirement(name = "bearerAuth")
 public class AlertController {
-
+    
     @Autowired
     private AlertService alertService;
-
+    
     @GetMapping
     @Operation(summary = "Get user's alerts with pagination")
     public ResponseEntity<List<AlertResponse>> getAlerts(
@@ -30,7 +31,7 @@ public class AlertController {
         List<AlertResponse> alerts = alertService.getUserAlerts(userDetails, page, size);
         return ResponseEntity.ok(alerts);
     }
-
+    
     @GetMapping("/unread")
     @Operation(summary = "Get unread alerts")
     public ResponseEntity<List<AlertResponse>> getUnreadAlerts(
@@ -38,7 +39,7 @@ public class AlertController {
         List<AlertResponse> unreadAlerts = alertService.getUnreadAlerts(userDetails);
         return ResponseEntity.ok(unreadAlerts);
     }
-
+    
     @GetMapping("/unread/count")
     @Operation(summary = "Get count of unread alerts")
     public ResponseEntity<Long> getUnreadCount(
@@ -46,7 +47,7 @@ public class AlertController {
         long count = alertService.getUnreadCount(userDetails);
         return ResponseEntity.ok(count);
     }
-
+    
     @PutMapping("/mark-read")
     @Operation(summary = "Mark alerts as read")
     public ResponseEntity<Void> markAlertsAsRead(
@@ -60,4 +61,3 @@ public class AlertController {
         }
     }
 }
-

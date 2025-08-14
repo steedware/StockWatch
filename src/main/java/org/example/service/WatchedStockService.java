@@ -1,4 +1,5 @@
 package org.example.service;
+
 import org.example.dto.WatchedStockRequest;
 import org.example.dto.WatchedStockResponse;
 import org.example.entity.User;
@@ -106,4 +107,3 @@ public class WatchedStockService {
         );
     }
 }
-
